@@ -27,9 +27,9 @@ Outcomes were log transformed and expressed as within pair differences (mutant �
 
 With only 6 animals contributing repeated, non-independent recordings, a plain OLS model would understate the true uncertainty — recordings from the same animal aren't independent samples, and a standard model would treat them as if they were. Two things had to be handled together:
 
-**1. Clustering.** For each of the 11 outcomes, a design effect (Deff) was estimated by comparing Bayesian bootstrap models with and without animal-level clustering (`bootlm` with `clustid`). Deff ranged from ~1.5 to ~23 across outcomes — meaning some kinetic measures showed almost no animal level dependency, while others (like `fwhmNMDA` at Deff ≈ 23) were heavily clustered by animal. Ignoring this would have made several effects look far more certain than they actually are.
+**1. Clustering.** For each of the 11 outcomes, a design effect (Deff) was estimated by comparing Bayesian bootstrap models with and without animal level clustering (`bootlm` with `clustid`). Deff ranged from ~1.5 to ~23 across outcomes — meaning some kinetic measures showed almost no animal level dependency, while others (like `fwhmNMDA` at Deff ≈ 23) were heavily clustered by animal. Ignoring this would have made several effects look far more certain than they actually are.
 
-**2. Small-sample, multi-outcome inference.** With 11 correlated outcomes and only 5-6 mutation groups, an empirical Bayes ridge regression (`bootridge`, .632 bootstrap-tuned, 1999 resamples) was used instead of per outcome OLS. This shrinks noisy per outcome estimates toward a common structure, uses the animal level Deff to correctly inflate residual variance and degrees of freedom, and returns Bayes factors and bootstrap stability scores (the proportion of bootstrap resamples in which a coefficient's sign/significance held) as evidence measures rather than relying on p-values alone in an underpowered design.
+**2. Small sample, multi outcome inference.** With 11 correlated outcomes and only 5-6 mutation groups, an empirical Bayes ridge regression (`bootridge`, .632 bootstrap tuned, 1999 resamples) was used instead of per outcome OLS. This shrinks noisy per outcome estimates toward a common structure, uses the animal level Deff to correctly inflate residual variance and degrees of freedom, and returns Bayes factors and bootstrap stability scores (the proportion of bootstrap resamples in which a coefficient's sign/significance held) as evidence measures rather than relying on p-values alone in an underpowered design.
 
 ## What the results show
 
@@ -53,16 +53,16 @@ Individual mutation vs mutation contrasts (e.g. loss of function vs. gain of fun
 Paired (+/-) log current-kinetic differences
         │
         ▼
-Per-outcome bootstrap linear models (bootlm, Wild bootstrap-t)
+Per outcome bootstrap linear models (bootlm, Wild bootstrap-t)
 for initial contrasts and sanity checks
         │
         ▼
-Animal-level design effect estimation
+Animal level design effect estimation
 (Bayesian bootstrap, clustered vs. unclustered)
         │
         ▼
 Empirical Bayes ridge regression (bootridge, .632 bootstrap-tuned,
-Deff-adjusted residual variance and degrees of freedom)
+Deff adjusted residual variance and degrees of freedom)
         │
         ▼
 Bayes factors + bootstrap stability scores per outcome × contrast
@@ -70,7 +70,7 @@ Bayes factors + bootstrap stability scores per outcome × contrast
 
 ## Running it
 
-Click the Binder badge above to launch the notebook directly — no local setup needed. To run locally, you need GNU Octave with the `statistics-resampling` package:
+Click the Binder badge above to launch the notebook directly — no local setup needed. To run locally, you need GNU Octave with the `statistics resampling` package:
 
 ```octave
 pkg install -forge statistics-resampling
@@ -82,9 +82,3 @@ Then open `GRIN2A-mutant.ipynb` in JupyterLab.
 ## Status
 
 This is an active collaboration with Dr Andrew Penn — the interaction model (mutation × transfection) and full contrast set are still being extended. This README reflects the analysis as of 2nd August 2026.
-
-## References
-
-Penn AC (2020). Resampling methods for small samples or samples with complex dependence structures. *Zenodo*. https://doi.org/10.5281/zenodo.3992392
-
-[Source dataset citation — need actual reference from Dr Penn or original paper]
