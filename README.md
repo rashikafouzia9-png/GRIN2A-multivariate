@@ -1,55 +1,90 @@
-# Example project using statistics-resampling-online
+# GRIN2A Mutant Electrophysiology Analysis
 
-This is an example project using [statistics-resampling-online](https://github.com/acpennlab/statistics-resampling-online/tree/jammy-docker). Click the `launch binder` button below to load the example project in your web browser.
+**Bootstrap and empirical Bayes ridge regression analysis of NMDA/AMPA receptor current kinetics across GRIN2A missense mutations**
 
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/acpennlab/statistics-resampling-online/jammy-docker?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252Frashikafouzia9-png%252FGRIN2A-multivariate%26urlpath%3Dlab%252Ftree%252FGRIN2A-multivariate%252F%26branch%3Dmaster)
+*Voluntary research collaboration, Dr Andrew Penn's lab · University of Sussex*
 
-Note that using this resource requires an active internet connection and an internet browser with javascript enabled. (If you don't know what that means then it probably is already!)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acpennlab/statistics-resampling-online/jammy-docker?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252Frashikafouzia9-png%252FGRIN2A-multivariate%26urlpath%3Dlab%252Ftree%252FGRIN2A-multivariate%252F%26branch%3Dmaster)
+[![Language](https://img.shields.io/badge/language-Octave-blue.svg)](https://octave.org/)
 
-🚧🔧 Parts of the documentation and example notebooks for this project are under construction 🔨🚧  
+---
 
-## How to use this template for your own data analysis projects
+## The question
 
-This binder loads a JupyterLab instance of the `statistics-resampling-project` repository. There are two possible methods that we recommend for using `statistics-resampling-online` for longer-term analysis projects, one that requires a local installation of GitHub Desktop (method 1) and one that is online-only (method 2).
+GRIN2A encodes the GluN2A subunit of the NMDA receptor. Missense mutations in this subunit are linked to epilepsy, but different mutations can have very different functional consequences on receptor behaviour — some slow the receptor's kinetics, some speed them up, some barely change them at all.
 
-### Method 1
-Here follows a list of steps describing how you can set up a GitHub repository to use `statistics-resampling-online` for your own data analysis project.
-1. If you don't already have a GitHub account, create one by following the instructions [here](https://docs.github.com/en/get-started/onboarding/getting-started-with-your-github-account)
-2. If you don't already have GitHub Desktop app, download and install it by following the instructions [here](https://docs.github.com/en/desktop/installing-and-authenticating-to-github-desktop/installing-github-desktop)
-3. In your browser, go to the [acpennlab/statistics-resampling-project](https://github.com/acpennlab/statistics-resampling-project) and click the 'Use this template' button and 'Create a new repository' from the dropdown menu. In the settings for your new GitHub repository, give it a name and description and ensure that the visibility is set to `public`. (Further information about creating a GitHub repository from a template is available [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
-4. In your new GitHub respoitory, edit the link in the Binder badge using a new URL created by the `Binder` tab form at [nbgitpuller](https://nbgitpuller.readthedocs.io/en/latest/link.html?tab=binder) using the following settings: 
-  * BinderHub URL: `https://mybinder.org` 
-  * Git Environment Repository URL: `https://github.com/acpennlab/statistics-resampling-online` 
-  * Git Environment Repository Branch: `jammy-docker`  
-  * Git Content Repository URL: `https://github.com/<owner>/<repository>`  
-  * Git Environment Repository Branch: `master`  
-  * File to open: `index.ipynb`
-  * Application to Open: `JupyterLab`  
-  *N.B Ensure that you replace \<owner\> and \<repository\> with your GitHub ID and the name that you gave to your repository upon creation*
-5. Make a local copy of your repository by cloning your new statistics-resampling-project repository using the GitHub Desktop app by following the instructions [here](https://docs.github.com/en/desktop/adding-and-cloning-repositories/cloning-a-repository-from-github-to-github-desktop)
-6. Edit the settings in your browser settings to prompt the user for the location of loaded files and ensure that java script is enabled. How to do this well depend on your browser. For Chrome, see the section on how to *'Change download location'* [here](https://support.google.com/chrome/answer/95759?hl=en-GB&co=GENIE.Platform%3DDesktop#zippy=%2Cchange-download-locations) 
-7. On the GitHub repository page in your browser, click the updated Binder badge to launch your project
-8. Edit or upload your data and create and edit your notebooks within the temporary instance of JupyterLab
-9. From the file menu, save and then download your files to your local copy of the repository (replacing existing files if necessary). Note that if your instance of Binder times-out, use the Jupyter-Offline-Notebook toolbar to store the visible copy of the notebook (as described [here](https://github.com/manics/jupyter-offlinenotebook)). 
-10. Finally, in GitHub desktop, enter a short commit summary and push the changes to the `master` branch of your online GitHub repository. Next time, simply return to your GitHub repo site and repeat the last four steps (7-10) of these instructions to continue with your project.
+This project asks: **do individual GRIN2A missense mutations (K669N, L812M, C436R, T531M, R518H) measurably alter NMDA and AMPA receptor current kinetics relative to wildtype, and which kinetic properties are actually affected?**
 
-### Method 2
-This method uses the Git extension in Jupyterlab to push changes (saved and stashed commits) directly to the GitHub reposiory online. In addition to creating a GitHub account and repository (steps 1, 3 and 4 of method 1), pushing commits requires you to enter your username (i.e. name of owner of the GitHub repository you created) and a personal access token (which you also need to create). To create a classic personal access token, follow the instructions [here](https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) - you will only need to include the `repo` scopes for this personal access token. More details to follow shortly...
+## Data
 
+Paired transfection electrophysiology recordings (`data/n2a_mutant.xlsx`): for each of 6 animals, cells were recorded under a mutant (+) and control (–) transfection condition. Eleven kinetic outcome measures were extracted per recording pair, covering both NMDA and AMPA components:
 
-## Links
-If you use this resource, make it easier to find by giving the [acpennlab/statistics-resampling-project](https://github.com/acpennlab/statistics-resampling-project) repository a [star](https://docs.github.com/en/get-started/exploring-projects-on-github/saving-repositories-with-stars). 🌟
+`peakNMDA, decayNMDA, chargeNMDA, dt50NMDA, fwhmNMDA, peakAMPA, decayAMPA, chargeAMPA, riseAMPA, dt50AMPA, fwhmAMPA`
 
-If you have any issues or suggestions for the [statistics-resampling-online environment](https://github.com/acpennlab/statistics-resampling-online), please post an issue [here](https://github.com/acpennlab/statistics-resampling-online/issues).
+Outcomes were log transformed and expressed as within pair differences (mutant − control), giving 125 paired observations across 6 mutation groups (5 mutants + WT control comparisons).
 
-If you have any issues or suggestions for the example content at [statistics-resampling-project](https://github.com/acpennlab/statistics-resampling-project), please post an issue [here](https://github.com/acpennlab/statistics-resampling-project/issues).
+## Why this needed more than a standard linear model
 
-Please cite the following in any publication that uses the [statistics-resampling](https://github.com/gnu-octave/statistics-resampling) package, which is included in this binder:
+With only 6 animals contributing repeated, non-independent recordings, a plain OLS model would understate the true uncertainty — recordings from the same animal aren't independent samples, and a standard model would treat them as if they were. Two things had to be handled together:
 
-* Penn, Andrew Charles. (2020). Resampling methods for small samples or samples with complex dependence structures. *Zenodo*. [https://doi.org/10.5281/zenodo.3992392](https://doi.org/10.5281/zenodo.3992392)
-  
-  [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3992392.svg)](https://doi.org/10.5281/zenodo.3992392)
+**1. Clustering.** For each of the 11 outcomes, a design effect (Deff) was estimated by comparing Bayesian bootstrap models with and without animal-level clustering (`bootlm` with `clustid`). Deff ranged from ~1.5 to ~23 across outcomes — meaning some kinetic measures showed almost no animal level dependency, while others (like `fwhmNMDA` at Deff ≈ 23) were heavily clustered by animal. Ignoring this would have made several effects look far more certain than they actually are.
 
-The documentation for the statistics-resampling package can be found at the following link: 
+**2. Small-sample, multi-outcome inference.** With 11 correlated outcomes and only 5-6 mutation groups, an empirical Bayes ridge regression (`bootridge`, .632 bootstrap-tuned, 1999 resamples) was used instead of per outcome OLS. This shrinks noisy per outcome estimates toward a common structure, uses the animal level Deff to correctly inflate residual variance and degrees of freedom, and returns Bayes factors and bootstrap stability scores (the proportion of bootstrap resamples in which a coefficient's sign/significance held) as evidence measures rather than relying on p-values alone in an underpowered design.
 
-[![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://gnu-octave.github.io/statistics-resampling/)
+## What the results show
+
+Comparing WT vs. all mutants pooled (Contrast A), three NMDA kinetic measures stood out with strong, stable evidence:
+
+| Outcome | Coefficient | Bayes Factor (BF10) | Bootstrap stability |
+|---|---|---|---|
+| decayNMDA | +0.396 | 52,388 | 100% |
+| dt50NMDA | +0.397 | 1,315,889 | 100% |
+| fwhmNMDA | +0.377 | 9,463,895 | 100% |
+
+These three are consistently and strongly evidenced across the bootstrap resamples — GRIN2A mutations as a group slow NMDA current decay kinetics relative to WT. AMPA associated outcomes (peak, decay, charge, rise, dt50, fwhm) showed weak or inconclusive evidence (BF10 close to 1, stability well under the 97.5% threshold used here), suggesting the functional effect of these mutations is concentrated in NMDA current decay dynamics rather than amplitude or AMPA co-transmission.
+
+Individual mutation vs mutation contrasts (e.g. loss of function vs. gain of function groupings) are computed in the notebook but are noisier, as expected with 17-29 paired observations per mutation.
+
+*Full output, contrast definitions, and per-mutation estimated marginal means are in [`GRIN2A-mutant.ipynb`](GRIN2A-mutant.ipynb), with figures saved to `output/`.*
+
+## Method summary
+
+```
+Paired (+/-) log current-kinetic differences
+        │
+        ▼
+Per-outcome bootstrap linear models (bootlm, Wild bootstrap-t)
+for initial contrasts and sanity checks
+        │
+        ▼
+Animal-level design effect estimation
+(Bayesian bootstrap, clustered vs. unclustered)
+        │
+        ▼
+Empirical Bayes ridge regression (bootridge, .632 bootstrap-tuned,
+Deff-adjusted residual variance and degrees of freedom)
+        │
+        ▼
+Bayes factors + bootstrap stability scores per outcome × contrast
+```
+
+## Running it
+
+Click the Binder badge above to launch the notebook directly — no local setup needed. To run locally, you need GNU Octave with the `statistics-resampling` package:
+
+```octave
+pkg install -forge statistics-resampling
+pkg load statistics-resampling
+```
+
+Then open `GRIN2A-mutant.ipynb` in JupyterLab.
+
+## Status
+
+This is an active collaboration with Dr Andrew Penn — the interaction model (mutation × transfection) and full contrast set are still being extended. This README reflects the analysis as of 2nd August 2026.
+
+## References
+
+Penn AC (2020). Resampling methods for small samples or samples with complex dependence structures. *Zenodo*. https://doi.org/10.5281/zenodo.3992392
+
+[Source dataset citation — need actual reference from Dr Penn or original paper]
