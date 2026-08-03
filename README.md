@@ -1,84 +1,56 @@
 # GRIN2A Mutant Electrophysiology Analysis
 
-**Bootstrap and empirical Bayes ridge regression analysis of NMDA/AMPA receptor current kinetics across GRIN2A missense mutations**
+Bootstrap and empirical-Bayes ridge regression on NMDA/AMPA current kinetics across GRIN2A missense mutations.
 
-*Voluntary research collaboration, Dr Andrew Penn's lab · University of Sussex*
+*Voluntary research collaboration with Dr Andrew Penn, University of Sussex.*
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acpennlab/statistics-resampling-online/jammy-docker?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252Frashikafouzia9-png%252FGRIN2A-multivariate%26urlpath%3Dlab%252Ftree%252FGRIN2A-multivariate%252F%26branch%3Dmaster)
-[![Language](https://img.shields.io/badge/language-Octave-blue.svg)](https://octave.org/)
 
----
+## What this is
 
-## The question
-
-GRIN2A encodes the GluN2A subunit of the NMDA receptor. Missense mutations in this subunit are linked to epilepsy, but different mutations can have very different functional consequences on receptor behaviour — some slow the receptor's kinetics, some speed them up, some barely change them at all.
-
-This project asks: **do individual GRIN2A missense mutations (K669N, L812M, C436R, T531M, R518H) measurably alter NMDA and AMPA receptor current kinetics relative to wildtype, and which kinetic properties are actually affected?**
+GRIN2A codes for the GluN2A subunit of the NMDA receptor, and different missense mutations in it show up in epilepsy — but they don't all do the same thing functionally. Some slow the receptor down, some barely touch it. I'm looking at whether five specific mutations (K669N, L812M, C436R, T531M, R518H) actually change NMDA/AMPA current kinetics relative to wildtype, and if so, which properties are affected.
 
 ## Data
 
-Paired transfection electrophysiology recordings (`data/n2a_mutant.xlsx`): for each of 6 animals, cells were recorded under a mutant (+) and control (–) transfection condition. Eleven kinetic outcome measures were extracted per recording pair, covering both NMDA and AMPA components:
+Paired transfection recordings — each of 6 animals contributed a mutant (+) and control (–) recording. 11 kinetic measures per pair, covering both NMDA and AMPA components (peak, decay, charge, rise time, half decay time, FWHM). Outcomes are log transformed pair differences, 125 observations total across the 5 mutant groups.
 
-`peakNMDA, decayNMDA, chargeNMDA, dt50NMDA, fwhmNMDA, peakAMPA, decayAMPA, chargeAMPA, riseAMPA, dt50AMPA, fwhmAMPA`
+## Why not just run a linear model per outcome
 
-Outcomes were log transformed and expressed as within pair differences (mutant − control), giving 125 paired observations across 6 mutation groups (5 mutants + WT control comparisons).
+Because 6 animals contributing repeated recordings isn't 6 independent samples, and pretending it is would understate the real uncertainty. Two things had to be dealt with:
 
-## Why this needed more than a standard linear model
+**Clustering.** For each of the 11 outcomes I estimated a design effect by comparing clustered vs. unclustered Bayesian bootstrap models. It ranged from about 1.5 to 23 depending on the outcome — `fwhmNMDA` at Deff ≈ 23 means recordings from the same animal are very much not independent for that measure, while some other outcomes barely showed clustering at all. Ignoring this would make several effects look far more certain than they are.
 
-With only 6 animals contributing repeated, non-independent recordings, a plain OLS model would understate the true uncertainty — recordings from the same animal aren't independent samples, and a standard model would treat them as if they were. Two things had to be handled together:
+**Too many correlated outcomes, too few groups.** With 11 outcomes and 5-6 groups, per-outcome OLS is asking for trouble. I used empirical Bayes ridge regression instead (`bootridge`, .632 bootstrap, 1999 resamples), which shrinks noisy estimates and folds the animal level design effect into the residual variance and degrees of freedom, then reports Bayes factors and bootstrap stability (how often a coefficient held sign/significance across resamples) instead of leaning on p values in an underpowered design.
 
-**1. Clustering.** For each of the 11 outcomes, a design effect (Deff) was estimated by comparing Bayesian bootstrap models with and without animal level clustering (`bootlm` with `clustid`). Deff ranged from ~1.5 to ~23 across outcomes — meaning some kinetic measures showed almost no animal level dependency, while others (like `fwhmNMDA` at Deff ≈ 23) were heavily clustered by animal. Ignoring this would have made several effects look far more certain than they actually are.
+## Results
 
-**2. Small sample, multi outcome inference.** With 11 correlated outcomes and only 5-6 mutation groups, an empirical Bayes ridge regression (`bootridge`, .632 bootstrap tuned, 1999 resamples) was used instead of per outcome OLS. This shrinks noisy per outcome estimates toward a common structure, uses the animal level Deff to correctly inflate residual variance and degrees of freedom, and returns Bayes factors and bootstrap stability scores (the proportion of bootstrap resamples in which a coefficient's sign/significance held) as evidence measures rather than relying on p-values alone in an underpowered design.
+Pooling all mutants vs. WT (Contrast A), three NMDA measures came out strong:
 
-## What the results show
-
-Comparing WT vs. all mutants pooled (Contrast A), three NMDA kinetic measures stood out with strong, stable evidence:
-
-| Outcome | Coefficient | Bayes Factor (BF10) | Bootstrap stability |
+| Outcome | Coefficient | BF10 | Stability |
 |---|---|---|---|
 | decayNMDA | +0.396 | 52,388 | 100% |
 | dt50NMDA | +0.397 | 1,315,889 | 100% |
 | fwhmNMDA | +0.377 | 9,463,895 | 100% |
 
-These three are consistently and strongly evidenced across the bootstrap resamples — GRIN2A mutations as a group slow NMDA current decay kinetics relative to WT. AMPA associated outcomes (peak, decay, charge, rise, dt50, fwhm) showed weak or inconclusive evidence (BF10 close to 1, stability well under the 97.5% threshold used here), suggesting the functional effect of these mutations is concentrated in NMDA current decay dynamics rather than amplitude or AMPA co-transmission.
+Those BF10 values are enormous, and consistent across every bootstrap resample — the mutations as a group slow NMDA decay kinetics. AMPA-side outcomes didn't show anything close to this (BF10 near 1, stability well under threshold), so whatever these mutations are doing functionally, it's concentrated in NMDA decay, not amplitude or AMPA co-transmission.
 
-Individual mutation vs mutation contrasts (e.g. loss of function vs. gain of function groupings) are computed in the notebook but are noisier, as expected with 17-29 paired observations per mutation.
+Individual mutation-vs-mutation contrasts are in the notebook too but noisier, as you'd expect with 17-29 pairs per mutation rather than the pooled 125.
 
-*Full output, contrast definitions, and per-mutation estimated marginal means are in [`GRIN2A-mutant.ipynb`](GRIN2A-mutant.ipynb), with figures saved to `output/`.*
-
-## Method summary
-
-```
-Paired (+/-) log current-kinetic differences
-        │
-        ▼
-Per outcome bootstrap linear models (bootlm, Wild bootstrap-t)
-for initial contrasts and sanity checks
-        │
-        ▼
-Animal level design effect estimation
-(Bayesian bootstrap, clustered vs. unclustered)
-        │
-        ▼
-Empirical Bayes ridge regression (bootridge, .632 bootstrap-tuned,
-Deff adjusted residual variance and degrees of freedom)
-        │
-        ▼
-Bayes factors + bootstrap stability scores per outcome × contrast
-```
+Full contrasts, marginal means, and figures: [`GRIN2A-mutant.ipynb`](GRIN2A-mutant.ipynb), plots in `output/`.
 
 ## Running it
 
-Click the Binder badge above to launch the notebook directly — no local setup needed. To run locally, you need GNU Octave with the `statistics resampling` package:
+Binder badge above launches it with no setup. Locally you need Octave + `statistics-resampling`:
 
 ```octave
 pkg install -forge statistics-resampling
 pkg load statistics-resampling
 ```
 
-Then open `GRIN2A-mutant.ipynb` in JupyterLab.
-
 ## Status
 
-This is an active collaboration with Dr Andrew Penn — the interaction model (mutation × transfection) and full contrast set are still being extended. This README reflects the analysis as of 2nd August 2026.
+Active — this is still ongoing work with Dr Penn, the contrast set and interaction model are being extended. Last updated [August 2026].
+
+## References
+
+
