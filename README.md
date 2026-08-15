@@ -104,8 +104,5 @@ If you use or build on this analysis, please cite the original dataset and the s
 
 ## Links
 
-- [statistics-resampling package documentation](https://gnu-octave.github.io/statistics-resampling/)
 - [statistics-resampling source repository](https://github.com/gnu-octave/statistics-resampling)
 - [Binder environment](https://github.com/acpennlab/statistics-resampling-online)
-- [Original Elmasri et al. (2022) paper](https://doi.org/10.1038/s42003-022-03764-0)
-
