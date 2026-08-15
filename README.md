@@ -31,7 +31,7 @@ The original study reported results for each of 11 outcome variables (five NMDA:
 
 Exact fractional weights are used (e.g. 1/6 rather than 0.17) to guarantee column orthogonality and zero column sums, avoiding variance inflation in the ridge estimator.
 
-**Ridge regression.** `bootridge` fits all 11 outcome log ratios simultaneously. A single tuning constant λ is selected by minimising .632 bootstrap prediction error — an information-theoretic criterion tied to out of sample predictive performance. The optimised λ corresponds to a Gaussian empirical Bayes prior on regression coefficients; shrinkage is therefore data driven rather than subjectively specified.
+**Ridge regression.** `bootridge` fits all 11 outcome log ratios simultaneously. A single tuning constant λ is selected by minimising .632 bootstrap prediction error an information theoretic criterion tied to out of sample predictive performance. The optimised λ corresponds to a Gaussian empirical Bayes prior on regression coefficients; shrinkage is therefore data driven rather than subjectively specified.
 
 **Design effects.** Rather than assuming independent observations, design effects are computed separately for each of the 11 outcome variables by comparing cluster robust Bayesian bootstrap variance (clustered at animal level) to IID bootstrap variance, following the procedure described in Penn (2020). The mean design effect across outcomes is passed to `bootridge` to calibrate credible intervals and Bayes factors for the effective sample size.
 
