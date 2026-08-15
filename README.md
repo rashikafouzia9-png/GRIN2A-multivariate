@@ -3,8 +3,6 @@
 Multivariate empirical Bayes ridge regression reanalysis of published GRIN2A mutation patch clamp data from Elmasri et al. (2022). The original study analysed 11 synaptic current outcomes using separate univariate regressions; this project fits all outcomes jointly using the `bootridge` function from Penn's [statistics-resampling](https://github.com/gnu-octave/statistics-resampling) package, enabling inference that captures interoutcome correlation structure.
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/acpennlab/statistics-resampling-online/jammy-docker?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252Frashikafouzia9-png%252FGRIN2A-multivariate%26urlpath%3Dlab%252Ftree%252FGRIN2A-multivariate%252F%26branch%3Dmaster)
-[![Documentation](https://img.shields.io/badge/docs-online-blue.svg)](https://gnu-octave.github.io/statistics-resampling/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3992392.svg)](https://doi.org/10.5281/zenodo.3992392)
 
 ---
 
@@ -98,9 +96,9 @@ Bootridge with 1,999 resamples takes approximately 2 minutes on the Binder insta
 
 If you use or build on this analysis, please cite the original dataset and the statistical package:
 
-> Elmasri, M., Bhatt, D.L., Bhatt, D., Bhatt, D., Bhatt, D., & Bhatt, D. (2022). GluN2A and GluN2B NMDA receptor subunit modulation of inhibitory and excitatory synaptic transmission. *Communications Biology*, 5, 804. https://doi.org/10.1038/s42003-022-03764-0
+> Elmasri, M., Bhatt, D.L., Bhatt, D., Bhatt, D., Bhatt, D., & Bhatt, D. (2022). GluN2A and GluN2B NMDA receptor subunit modulation of inhibitory and excitatory synaptic transmission. *Communications Biology*, 5, 804.
 
-> Penn, A.C. (2020). Resampling methods for small samples or samples with complex dependence structures. *Zenodo*. https://doi.org/10.5281/zenodo.3992392
+> Penn, A.C. (2020). Resampling methods for small samples or samples with complex dependence structures. *Zenodo*. 
 
 ---
 
