@@ -2,7 +2,7 @@
 
 Multivariate empirical Bayes ridge regression reanalysis of published GRIN2A mutation patch clamp data from Elmasri et al. (2022). The original study analysed 11 synaptic current outcomes using separate univariate regressions; this project fits all outcomes jointly using the `bootridge` function from Penn's [statistics-resampling](https://github.com/gnu-octave/statistics-resampling) package, enabling inference that captures interoutcome correlation structure.
 
-https://hub.bids.mybinder.org/v2/gh/acpennlab/statistics-resampling-online/jammy-docker?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252Frashikafouzia9-png%252FGRIN2A-multivariate%26urlpath%3Dlab%252Ftree%252FGRIN2A-multivariate%252F%26branch%3Dmaster
+https://mybinder.org/v2/gh/acpennlab/statistics-resampling-online/jammy-docker?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252Frashikafouzia9-png%252FGRIN2A-multivariate%26urlpath%3Dlab%252Ftree%252FGRIN2A-multivariate%252F%26branch%3Dmaster)
 
 ---
 
